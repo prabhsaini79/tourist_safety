@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Tourist Safety Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛡️ Tourist Safety
+    </div>
+
+
+    <div class="nav-right">
+
+        <span class="welcome-user">
+            Welcome,
+            {{ user.get("name", "Tourist") }}
+        </span>
+
+
+        <a href="{{ url_for('logout') }}"
+           class="logout-btn">
+
+            Logout
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<main class="dashboard">
+
+
+    <!-- WELCOME -->
+
+    <section class="welcome-section">
+
+        <h1>
+            Welcome,
+            {{ user.get("name", "Tourist") }} 👋
+        </h1>
+
+        <p>
+            Your safety is our priority.
+        </p>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SOS
+    ================================================== -->
+
+    <section class="sos-section">
+
+        <button
+            class="sos-button"
+            onclick="sendSOS()">
+
+            🚨 SOS
+
+        </button>
+
+
+        <p id="sos-status"></p>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SAFETY SERVICES
+    ================================================== -->
+
+    <h2 class="section-title">
+        Safety Services
+    </h2>
+
+
+    <section class="feature-grid">
+
+
+        <!-- =============================================
+             LIVE LOCATION
+        ============================================== -->
+
+        <div class="feature-card">
+
+            <div class="icon">
+                📍
+            </div>
+
+            <h3>
+                Live Location
+            </h3>
+
+            <p>
+                Track your current location using GPS.
+            </p>
+
+
+            <button onclick="startLocationTracking()">
+
+                Start Tracking
+
+            </button>
+
+
+            <button
+                class="stop-button"
+                onclick="stopLocationTracking()">
+
+                Stop Tracking
+
+            </button>
+
+
+            <div class="location-info">
+
+                <p id="location-status">
+                    Location tracking is not started.
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Latitude:
+                    </strong>
+
+                    <span id="latitude">
+                        --
+                    </span>
+
+                </p>
+
+
+                <p>
+
+                    <strong>
+                        Longitude:
+                    </strong>
+
+                    <span id="longitude">
+                        --
+                    </span>
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             NEARBY POLICE
+        ============================================== -->
+
+        <div class="feature-card">
+
+            <div class="icon">
+                👮
+            </div>
+
+            <h3>
+                Nearby Police Stations
+            </h3>
+
+            <p>
+                Find police stations near your current
+                location.
+            </p>
+
+
+            <button onclick="findNearbyPolice()">
+
+                Find Police
+
+            </button>
+
+
+            <div id="police-status"
+                 class="police-status">
+
+                Please allow location access.
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             DIGITAL TOURIST ID
+        ============================================== -->
+
+        <div class="feature-card">
+
+            <div class="icon">
+                🪪
+            </div>
+
+            <h3>
+                Digital Tourist ID
+            </h3>
+
+            <p>
+                Access your secure digital tourist
+                identification card.
+            </p>
+
+
+            <button onclick="showTouristID()">
+
+                View Digital ID
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =============================================
+             ONLINE CHAT
+        ============================================== -->
+
+        <div class="feature-card">
+
+            <div class="icon">
+                💬
+            </div>
+
+            <h3>
+                Online Chat
+            </h3>
+
+            <p>
+                Get assistance from Tourist Safety Support.
+            </p>
+
+
+            <button onclick="openChat()">
+
+                Open Chat
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =============================================
+             MULTILANGUAGE
+        ============================================== -->
+
+        <div class="feature-card">
+
+            <div class="icon">
+                🌐
+            </div>
+
+            <h3>
+                Multilanguage
+            </h3>
+
+            <p>
+                Translate the dashboard into your
+                preferred language.
+            </p>
+
+
+            <div id="google_translate_element"></div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             SAFETY TIPS
+        ============================================== -->
+
+        <div class="feature-card">
+
+            <div class="icon">
+                🛡️
+            </div>
+
+            <h3>
+                Safety Tips
+            </h3>
+
+            <p>
+                Read useful tips for safe travelling.
+            </p>
+
+
+            <button onclick="showSafetyTips()">
+
+                View Safety Tips
+
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         TOURIST INFORMATION
+    ================================================== -->
+
+    <section class="tourist-summary">
+
+        <h2>
+            👤 Tourist Information
+        </h2>
+
+
+        <div class="summary-grid">
+
+            <div>
+
+                <span>
+                    Name
+                </span>
+
+                <strong>
+                    {{ user.get("name", "Tourist") }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Tourist ID
+                </span>
+
+                <strong id="summaryTouristId">
+
+                    {{ user.get(
+                        "tourist_id",
+                        "Generating..."
+                    ) }}
+
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Account Status
+                </span>
+
+                <strong class="active-status">
+
+                    ● Active
+
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         EMERGENCY INFORMATION
+    ================================================== -->
+
+    <section class="emergency-box">
+
+        <h2>
+            🚨 Emergency Information
+        </h2>
+
+
+        <p>
+            If you are in immediate danger, use the
+            SOS button and contact the appropriate
+            emergency services.
+        </p>
+
+
+        <p>
+            Keep your phone charged and share your
+            location with someone you trust.
+        </p>
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     CHATBOX
+===================================================== -->
+
+<div id="chatBox"
+     class="chat-box">
+
+
+    <div class="chat-header">
+
+        <div>
+            💬 Tourist Safety Chat
+        </div>
+
+
+        <button
+            class="chat-close"
+            onclick="closeChat()">
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <div id="chatMessages"
+         class="chat-messages">
+
+        <div class="bot-message">
+
+            👋 Hello!
+
+            <br><br>
+
+            Welcome to Tourist Safety Support.
+
+            <br><br>
+
+            How can we help you?
+
+        </div>
+
+    </div>
+
+
+    <div class="chat-input-area">
+
+        <input
+            type="text"
+            id="chatInput"
+            placeholder="Type your message..."
+            autocomplete="off"
+            onkeydown="handleChatKey(event)"
+        >
+
+
+        <button onclick="sendChatMessage()">
+
+            Send
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     DIGITAL TOURIST ID MODAL
+===================================================== -->
+
+<div id="touristIdModal"
+     class="custom-modal">
+
+
+    <div class="modal-content tourist-id-modal">
+
+
+        <button
+            class="modal-close"
+            onclick="closeTouristID()">
+
+            ×
+
+        </button>
+
+
+        <div class="tourist-id-card">
+
+
+            <!-- HEADER -->
+
+            <div class="tourist-id-header">
+
+                <div class="tourist-shield">
+                    🛡️
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Tourist Safety ID
+                    </h2>
+
+                    <p>
+                        Digital Tourist Identification
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BODY -->
+
+            <div class="tourist-id-body">
+
+
+                <div class="tourist-avatar">
+                    👤
+                </div>
+
+
+                <div class="tourist-details">
+
+
+                    <p>
+
+                        <strong>
+                            Name
+                        </strong>
+
+                        <span id="touristName">
+                            {{ user.get("name", "Tourist") }}
+                        </span>
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Tourist ID
+                        </strong>
+
+                        <span id="touristIdValue">
+
+                            {{ user.get(
+                                "tourist_id",
+                                "Loading..."
+                            ) }}
+
+                        </span>
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Email
+                        </strong>
+
+                        <span id="touristEmail">
+
+                            {{ user.get(
+                                "email",
+                                "Not available"
+                            ) }}
+
+                        </span>
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Mobile
+                        </strong>
+
+                        <span id="touristMobile">
+
+                            {{ user.get(
+                                "mobile",
+                                "Not available"
+                            ) }}
+
+                        </span>
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Status
+                        </strong>
+
+                        <span class="tourist-active">
+
+                            ● Active
+
+                        </span>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- FOOTER -->
+
+            <div class="tourist-id-footer">
+
+                <span>
+                    🛡️ Tourist Safety System
+                </span>
+
+
+                <span>
+                    Digital ID
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <button
+            class="download-id-btn"
+            onclick="printTouristID()">
+
+            🖨️ Print / Save ID
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SAFETY TIPS MODAL
+===================================================== -->
+
+<div id="safetyTipsModal"
+     class="custom-modal">
+
+
+    <div class="modal-content">
+
+
+        <button
+            class="modal-close"
+            onclick="closeSafetyTips()">
+
+            ×
+
+        </button>
+
+
+        <h2>
+            🛡️ Travel Safety Tips
+        </h2>
+
+
+        <ul class="safety-list">
+
+            <li>
+                Keep your phone charged while travelling.
+            </li>
+
+
+            <li>
+                Keep important emergency contacts saved.
+            </li>
+
+
+            <li>
+                Avoid sharing sensitive personal
+                information with strangers.
+            </li>
+
+
+            <li>
+                Keep location services enabled when
+                navigation or assistance is required.
+            </li>
+
+
+            <li>
+                Inform someone you trust about your
+                travel plans.
+            </li>
+
+
+            <li>
+                Use the SOS feature when immediate
+                assistance is required.
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+/* =====================================================
+   DIGITAL TOURIST ID
+===================================================== */
+
+function showTouristID() {
+
+    const modal =
+        document.getElementById(
+            "touristIdModal"
+        );
+
+
+    modal.classList.add("show");
+
+
+    /*
+     * Get latest Tourist ID from Flask
+     */
+
+    fetch("/api/tourist-id")
+
+        .then(function(response) {
+
+            return response.json();
+
+        })
+
+        .then(function(data) {
+
+            if (!data.success) {
+
+                return;
+
+            }
+
+
+            const tourist =
+                data.tourist;
+
+
+            document.getElementById(
+                "touristName"
+            ).innerText =
+                tourist.name;
+
+
+            document.getElementById(
+                "touristIdValue"
+            ).innerText =
+                tourist.tourist_id;
+
+
+            document.getElementById(
+                "touristEmail"
+            ).innerText =
+                tourist.email;
+
+
+            document.getElementById(
+                "touristMobile"
+            ).innerText =
+                tourist.mobile;
+
+
+            document.getElementById(
+                "summaryTouristId"
+            ).innerText =
+                tourist.tourist_id;
+
+        })
+
+        .catch(function(error) {
+
+            console.error(
+                "Tourist ID error:",
+                error
+            );
+
+        });
+
+}
+
+
+
+function closeTouristID() {
+
+    document.getElementById(
+        "touristIdModal"
+    ).classList.remove("show");
+
+}
+
+
+
+/* =====================================================
+   PRINT DIGITAL ID
+===================================================== */
+
+function printTouristID() {
+
+    const card =
+        document.querySelector(
+            ".tourist-id-card"
+        );
+
+
+    if (!card) {
+
+        return;
+
+    }
+
+
+    const printWindow =
+        window.open(
+            "",
+            "_blank",
+            "width=700,height=700"
+        );
+
+
+    printWindow.document.write(`
+
+        <html>
+
+        <head>
+
+            <title>
+                Digital Tourist ID
+            </title>
+
+            <style>
+
+                body {
+
+                    font-family:
+                        Arial,
+                        sans-serif;
+
+                    display:
+                        flex;
+
+                    justify-content:
+                        center;
+
+                    align-items:
+                        center;
+
+                    min-height:
+                        100vh;
+
+                    background:
+                        #f1f5f9;
+
+                }
+
+
+                .tourist-id-card {
+
+                    width:
+                        430px;
+
+                    border:
+                        2px solid #2563eb;
+
+                    border-radius:
+                        20px;
+
+                    overflow:
+                        hidden;
+
+                    background:
+                        white;
+
+                }
+
+
+                .tourist-id-header {
+
+                    display:
+                        flex;
+
+                    align-items:
+                        center;
+
+                    gap:
+                        15px;
+
+                    padding:
+                        20px;
+
+                    background:
+                        #2563eb;
+
+                    color:
+                        white;
+
+                }
+
+
+                .tourist-shield {
+
+                    font-size:
+                        40px;
+
+                }
+
+
+                .tourist-id-header h2 {
+
+                    margin:
+                        0;
+
+                    color:
+                        white;
+
+                }
+
+
+                .tourist-id-header p {
+
+                    margin:
+                        5px 0 0;
+
+                }
+
+
+                .tourist-id-body {
+
+                    display:
+                        flex;
+
+                    gap:
+                        20px;
+
+                    padding:
+                        25px;
+
+                }
+
+
+                .tourist-avatar {
+
+                    font-size:
+                        50px;
+
+                }
+
+
+                .tourist-details p {
+
+                    margin:
+                        9px 0;
+
+                }
+
+
+                .tourist-details strong {
+
+                    display:
+                        block;
+
+                    font-size:
+                        11px;
+
+                    color:
+                        #64748b;
+
+                }
+
+
+                .tourist-details span {
+
+                    font-weight:
+                        600;
+
+                }
+
+
+                .tourist-id-footer {
+
+                    display:
+                        flex;
+
+                    justify-content:
+                        space-between;
+
+                    padding:
+                        15px;
+
+                    border-top:
+                        1px solid #ddd;
+
+                    font-size:
+                        12px;
+
+                    color:
+                        #64748b;
+
+                }
+
+            </style>
+
+        </head>
+
+
+        <body>
+
+            ${card.outerHTML}
+
+        </body>
+
+        </html>
+
+    `);
+
+
+    printWindow.document.close();
+
+
+    printWindow.focus();
+
+
+    setTimeout(function() {
+
+        printWindow.print();
+
+    }, 500);
+
+}
+
+
+
+/* =====================================================
+   SOS
+===================================================== */
+
+function sendSOS() {
+
+    const status =
+        document.getElementById(
+            "sos-status"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        status.innerText =
+            "Location is not supported by this browser.";
+
+        return;
+
+    }
+
+
+    status.innerText =
+        "Getting your location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+            const longitude =
+                position.coords.longitude;
+
+
+            status.innerText =
+                "🚨 Sending SOS alert...";
+
+
+            fetch("/sos", {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    latitude:
+                        latitude,
+
+                    longitude:
+                        longitude
+
+                })
+
+            })
+
+            .then(function(response) {
+
+                return response.json();
+
+            })
+
+            .then(function(data) {
+
+                if (data.success) {
+
+                    status.innerText =
+                        "🚨 SOS alert recorded successfully.";
+
+                }
+
+                else {
+
+                    status.innerText =
+                        "❌ "
+                        + data.message;
+
+                }
+
+            })
+
+            .catch(function(error) {
+
+                console.error(error);
+
+                status.innerText =
+                    "❌ Unable to send SOS.";
+
+            });
+
+        },
+
+        function() {
+
+            status.innerText =
+                "❌ Please allow location access.";
+
+        },
+
+        {
+
+            enableHighAccuracy:
+                true,
+
+            timeout:
+                10000,
+
+            maximumAge:
+                0
+
+        }
+
+    );
+
+}
+
+
+
+/* =====================================================
+   LIVE LOCATION
+===================================================== */
+
+let locationWatchId = null;
+
+
+
+function startLocationTracking() {
+
+    const status =
+        document.getElementById(
+            "location-status"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        status.innerText =
+            "Geolocation is not supported.";
+
+        return;
+
+    }
+
+
+    status.innerText =
+        "📍 Getting current location...";
+
+
+    locationWatchId =
+        navigator.geolocation.watchPosition(
+
+            function(position) {
+
+                const latitude =
+                    position.coords.latitude;
+
+                const longitude =
+                    position.coords.longitude;
+
+
+                document.getElementById(
+                    "latitude"
+                ).innerText =
+                    latitude.toFixed(6);
+
+
+                document.getElementById(
+                    "longitude"
+                ).innerText =
+                    longitude.toFixed(6);
+
+
+                status.innerText =
+                    "✅ Live location tracking active.";
+
+
+                fetch(
+                    "/update-location",
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                latitude:
+                                    latitude,
+
+                                longitude:
+                                    longitude
+
+                            })
+
+                    }
+
+                )
+
+                .catch(function(error) {
+
+                    console.error(
+                        "Location update error:",
+                        error
+                    );
+
+                });
+
+            },
+
+
+            function() {
+
+                status.innerText =
+                    "❌ Please allow location access.";
+
+            },
+
+
+            {
+
+                enableHighAccuracy:
+                    true,
+
+                maximumAge:
+                    5000,
+
+                timeout:
+                    10000
+
+            }
+
+        );
+
+}
+
+
+
+function stopLocationTracking() {
+
+    if (
+        locationWatchId !== null
+    ) {
+
+        navigator.geolocation.clearWatch(
+            locationWatchId
+        );
+
+
+        locationWatchId = null;
+
+    }
+
+
+    document.getElementById(
+        "location-status"
+    ).innerText =
+        "Location tracking stopped.";
+
+}
+
+
+
+/* =====================================================
+   NEARBY POLICE
+===================================================== */
+
+function findNearbyPolice() {
+
+    const status =
+        document.getElementById(
+            "police-status"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        status.innerText =
+            "Location is not supported.";
+
+        return;
+
+    }
+
+
+    status.innerText =
+        "📍 Finding nearby police stations...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+            const longitude =
+                position.coords.longitude;
+
+
+            fetch(
+                "/nearby-police",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            latitude:
+                                latitude,
+
+                            longitude:
+                                longitude
+
+                        })
+
+                }
+
+            )
+
+            .then(function(response) {
+
+                return response.json();
+
+            })
+
+            .then(function(data) {
+
+                if (!data.success) {
+
+                    status.innerText =
+                        "❌ "
+                        + data.message;
+
+                    return;
+
+                }
+
+
+                if (
+                    !data.stations ||
+                    data.stations.length === 0
+                ) {
+
+                    status.innerText =
+                        "No police stations found nearby.";
+
+                    return;
+
+                }
+
+
+                let html =
+                    "<strong>👮 Nearby Police Stations</strong><br><br>";
+
+
+                data.stations
+                    .slice(0, 5)
+                    .forEach(function(station) {
+
+
+                        const mapsUrl =
+                            "https://www.google.com/maps/search/?api=1"
+                            + "&query="
+                            + station.latitude
+                            + ","
+                            + station.longitude;
+
+
+                        html +=
+                            "🚓 <strong>"
+                            + station.name
+                            + "</strong><br>";
+
+
+                        html +=
+                            "📏 "
+                            + station.distance
+                            + " km away<br>";
+
+
+                        html +=
+                            "<a href='"
+                            + mapsUrl
+                            + "' target='_blank'>"
+                            + "Open in Google Maps"
+                            + "</a>";
+
+
+                        html +=
+                            "<br><br>";
+
+                    });
+
+
+                status.innerHTML =
+                    html;
+
+            })
+
+            .catch(function(error) {
+
+                console.error(error);
+
+                status.innerText =
+                    "❌ Unable to find police stations.";
+
+            });
+
+        },
+
+
+        function() {
+
+            status.innerText =
+                "❌ Please allow location access.";
+
+        },
+
+        {
+
+            enableHighAccuracy:
+                true,
+
+            timeout:
+                10000,
+
+            maximumAge:
+                0
+
+        }
+
+    );
+
+}
+
+
+
+/* =====================================================
+   CHAT
+===================================================== */
+
+function openChat() {
+
+    document.getElementById(
+        "chatBox"
+    ).classList.add("active");
+
+
+    loadChatHistory();
+
+
+    setTimeout(function() {
+
+        document.getElementById(
+            "chatInput"
+        ).focus();
+
+    }, 200);
+
+}
+
+
+
+function closeChat() {
+
+    document.getElementById(
+        "chatBox"
+    ).classList.remove("active");
+
+}
+
+
+
+function handleChatKey(event) {
+
+    if (
+        event.key === "Enter"
+    ) {
+
+        sendChatMessage();
+
+    }
+
+}
+
+
+
+function addChatMessage(
+    sender,
+    message
+) {
+
+    const messages =
+        document.getElementById(
+            "chatMessages"
+        );
+
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    if (
+        sender === "user"
+    ) {
+
+        div.className =
+            "user-message";
+
+    }
+
+    else {
+
+        div.className =
+            "bot-message";
+
+    }
+
+
+    div.innerText =
+        message;
+
+
+    messages.appendChild(
+        div
+    );
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+
+function sendChatMessage() {
+
+    const input =
+        document.getElementById(
+            "chatInput"
+        );
+
+
+    const message =
+        input.value.trim();
+
+
+    if (!message) {
+
+        return;
+
+    }
+
+
+    addChatMessage(
+        "user",
+        message
+    );
+
+
+    input.value = "";
+
+
+    fetch(
+        "/chat/send",
+        {
+
+            method:
+                "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+            body:
+                JSON.stringify({
+
+                    message:
+                        message
+
+                })
+
+        }
+
+    )
+
+    .then(function(response) {
+
+        return response.json();
+
+    })
+
+    .then(function(data) {
+
+        if (data.success) {
+
+            addChatMessage(
+                "bot",
+                data.reply
+            );
+
+        }
+
+        else {
+
+            addChatMessage(
+                "bot",
+                "❌ " + data.message
+            );
+
+        }
+
+    })
+
+    .catch(function(error) {
+
+        console.error(error);
+
+        addChatMessage(
+            "bot",
+            "❌ Unable to connect to support."
+        );
+
+    });
+
+}
+
+
+
+/* =====================================================
+   CHAT HISTORY
+===================================================== */
+
+function loadChatHistory() {
+
+    fetch("/chat/history")
+
+        .then(function(response) {
+
+            return response.json();
+
+        })
+
+        .then(function(data) {
+
+            if (
+                !data.success ||
+                !data.messages
+            ) {
+
+                return;
+
+            }
+
+
+            const messages =
+                document.getElementById(
+                    "chatMessages"
+                );
+
+
+            messages.innerHTML = "";
+
+
+            data.messages.forEach(
+                function(item) {
+
+                    addChatMessage(
+                        item.sender,
+                        item.message
+                    );
+
+                }
+            );
+
+        })
+
+        .catch(function(error) {
+
+            console.error(
+                "Chat history error:",
+                error
+            );
+
+        });
+
+}
+
+
+
+/* =====================================================
+   SAFETY TIPS
+===================================================== */
+
+function showSafetyTips() {
+
+    document.getElementById(
+        "safetyTipsModal"
+    ).classList.add("show");
+
+}
+
+
+
+function closeSafetyTips() {
+
+    document.getElementById(
+        "safetyTipsModal"
+    ).classList.remove("show");
+
+}
+
+
+
+/* =====================================================
+   GOOGLE TRANSLATE
+===================================================== */
+
+function googleTranslateElementInit() {
+
+    new google.translate.TranslateElement(
+
+        {
+
+            pageLanguage:
+                "en",
+
+            includedLanguages:
+                "en,hi,pa,bn,gu,mr,ta,te,kn,ml,ur,ne,or,as,"
+                + "fr,de,es,it,pt,ru,ar,zh-CN,ja,ko,th,tr,"
+                + "vi,id,ms,nl,pl,uk,fa,sw,he",
+
+            layout:
+                google.translate.TranslateElement
+                .InlineLayout.SIMPLE,
+
+            autoDisplay:
+                false
+
+        },
+
+        "google_translate_element"
+
+    );
+
+}
+
+
+
+/* =====================================================
+   CLOSE MODALS OUTSIDE
+===================================================== */
+
+window.onclick =
+    function(event) {
+
+        const idModal =
+            document.getElementById(
+                "touristIdModal"
+            );
+
+
+        const tipsModal =
+            document.getElementById(
+                "safetyTipsModal"
+            );
+
+
+        if (
+            event.target === idModal
+        ) {
+
+            closeTouristID();
+
+        }
+
+
+        if (
+            event.target === tipsModal
+        ) {
+
+            closeSafetyTips();
+
+        }
+
+    };
+
+
+</script>
+
+
+
+<!-- =====================================================
+     GOOGLE TRANSLATE
+===================================================== -->
+
+<script
+    type="text/javascript"
+    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+
+
+</body>
+
+</html> 
